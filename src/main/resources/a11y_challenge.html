@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Interactive accessibility awareness challenges for conference audiences. Experience barriers that people with disabilities face every day.">
+    <title>Experience Accessibility Barriers</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #eab308;
+            --border: #334155;
+            --glow: rgba(59, 130, 246, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 100%; }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Landing Screen ─── */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 1.5rem;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Landing ─── */
+        #landing {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        #landing h1 {
+            font-size: 1.75rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--accent-light), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #landing .subtitle {
+            color: var(--muted);
+            font-size: 1.05rem;
+            max-width: 320px;
+            line-height: 1.5;
+        }
+
+        .emoji-icon {
+            font-size: 3rem;
+        }
+
+        /* ─── Buttons ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 14px var(--glow);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-large {
+            padding: 1.1rem 2rem;
+            font-size: 1.15rem;
+            border-radius: 1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent-light);
+            box-shadow: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ─── Challenge Layout ─── */
+        .challenge-header {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .challenge-header .step {
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
+        .challenge-header h2 {
+            font-size: 1.4rem;
+            margin-top: 0.35rem;
+        }
+
+        .challenge-header .description {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .challenge-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .challenge-footer {
+            text-align: center;
+            padding-top: 1rem;
+        }
+
+        /* ─── Progress bar ─── */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* ─── Timer ─── */
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-light);
+        }
+
+        .timer.urgent {
+            color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ─── Panel / Card ─── */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            width: 100%;
+        }
+
+        /* ─── Instruction overlay ─── */
+        .instruction-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.92);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            z-index: 100;
+            gap: 1.25rem;
+        }
+
+        .instruction-overlay.active {
+            display: flex;
+        }
+
+        .instruction-overlay h2 {
+            font-size: 1.5rem;
+        }
+
+        .instruction-overlay .instruction-text {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 340px;
+        }
+
+        .instruction-overlay .physical-instruction {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            color: var(--accent-light);
+            font-weight: 600;
+            font-size: 1.05rem;
+            max-width: 320px;
+            line-height: 1.5;
+        }
+
+        /* ─── CHALLENGE 1: Shaky targets ─── */
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .target-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .target-btn.active-target {
+            background: var(--accent);
+            border-color: var(--accent-light);
+            box-shadow: 0 0 20px var(--glow);
+            animation: targetPulse 0.8s infinite;
+        }
+
+        .target-btn.hit {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .target-btn.miss {
+            background: var(--danger);
+            border-color: var(--danger);
+            animation: shake 0.3s;
+        }
+
+        @keyframes targetPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .score-display {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+
+        /* Tremor simulation */
+        .tremor-active {
+            animation: tremor 0.08s infinite;
+        }
+
+        @keyframes tremor {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(2px, -1px); }
+            50% { transform: translate(-1px, 2px); }
+            75% { transform: translate(-2px, -2px); }
+            100% { transform: translate(1px, 1px); }
+        }
+
+        /* ─── CHALLENGE 2: One-handed form ─── */
+        .form-challenge {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .form-challenge .form-group {
+            margin-bottom: 0.875rem;
+        }
+
+        .form-challenge label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+            font-size: 0.95rem;
+        }
+
+        .form-challenge input,
+        .form-challenge select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .form-challenge input:focus,
+        .form-challenge select:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        /* ─── CHALLENGE 3: Tunnel Vision ─── */
+        .tunnel-container {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            min-height: 400px;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .tunnel-content {
+            padding: 1.25rem;
+            background: var(--panel);
+        }
+
+        .tunnel-content h3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .tunnel-content p {
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .tunnel-content .hidden-btn {
+            margin-top: 1rem;
+        }
+
+        .tunnel-mask {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* ─── CHALLENGE 4: Time pressure ─── */
+        .otp-challenge {
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+        }
+
+        .otp-display {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5rem;
+            color: var(--accent-light);
+            margin: 1rem 0;
+            font-family: "Courier New", monospace;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .otp-inputs input {
+            width: 2.75rem;
+            height: 3.25rem;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .otp-inputs input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow);
+        }
+
+        /* ─── Results screen ─── */
+        .results-list {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .result-item {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .result-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .result-item .result-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .result-item .result-status.pass {
+            color: var(--success);
+        }
+
+        .result-item .result-status.fail {
+            color: var(--danger);
+        }
+
+        .result-item .insight {
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 0.375rem;
+            line-height: 1.5;
+        }
+
+        /* ─── Reflection screen ─── */
+        .reflection-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .reflection-card blockquote {
+            font-style: italic;
+            color: var(--accent-light);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+        }
+
+        .reflection-card .disability-types {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.25rem 0;
+            flex-wrap: wrap;
+        }
+
+        .disability-type {
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            min-width: 90px;
+        }
+
+        .disability-type .dt-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .disability-type .dt-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── Utility ─── */
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .gap-row { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LANDING SCREEN                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="landing" class="screen active">
+        <div class="emoji-icon" aria-hidden="true">&#9889;</div>
+        <h1>Experience Accessibility Barriers</h1>
+        <p class="subtitle">
+            4 quick challenges that let you feel what millions of people experience every day when using their phones.
+        </p>
+        <button class="btn btn-large" onclick="startChallenge()">
+            Start the Experience
+        </button>
+        <p style="color: var(--muted); font-size: 0.85rem; margin-top: 0.5rem;">
+            Takes about 3-4 minutes
+        </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 1 INSTRUCTIONS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c1-instructions" class="instruction-overlay">
+        <div class="emoji-icon" aria-hidden="true">&#129306;</div>
+        <h2>Challenge 1: The Shaky Hand</h2>
+        <p class="instruction-text">
+            Imagine you have a hand tremor. The screen will shake while you try to tap the highlighted squares.
+        </p>
+        <div class="physical-instruction">
+            &#128073; Hold your phone with just your fingertips at arm's length while doing this!
+        </div>
+        <button class="btn btn-large" onclick="startC1()">I'm ready</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 1: TREMOR / SHAKY TARGETS    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c1" class="screen">
+        <div class="progress-bar"><div class="fill" style="width: 25%"></div></div>
+        <div class="challenge-header">
+            <div class="step">Challenge 1 of 4</div>
+            <h2>Tap the Glowing Square</h2>
+            <p class="description">Tap each highlighted square as fast as you can!</p>
+        </div>
+        <div class="challenge-area">
+            <div class="timer" id="c1-timer">15</div>
+            <div class="score-display">Score: <span id="c1-score">0</span> / <span id="c1-total">8</span></div>
+            <div class="target-grid tremor-active" id="c1-grid">
+                <!-- 9 target buttons -->
+            </div>
+        </div>
+        <div class="challenge-footer">
+            <button class="btn btn-outline" onclick="skipToNext(2)">Skip</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 2 INSTRUCTIONS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c2-instructions" class="instruction-overlay">
+        <div class="emoji-icon" aria-hidden="true">&#9749;</div>
+        <h2>Challenge 2: One Hand Only</h2>
+        <p class="instruction-text">
+            Millions of people use their phone one-handed: carrying a child, holding a coffee, on crutches, or with a permanent limb difference.
+        </p>
+        <div class="physical-instruction">
+            &#128073; Pick up something with your dominant hand (a bottle, bag, or just make a fist). Now complete a form using <strong>only your other hand</strong>!
+        </div>
+        <button class="btn btn-large" onclick="startC2()">I'm holding something</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 2: ONE-HANDED FORM           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c2" class="screen">
+        <div class="progress-bar"><div class="fill" style="width: 50%"></div></div>
+        <div class="challenge-header">
+            <div class="step">Challenge 2 of 4</div>
+            <h2>Complete the Form</h2>
+            <p class="description">Fill in all fields. Remember: non-dominant hand only!</p>
+        </div>
+        <div class="challenge-area">
+            <div class="timer" id="c2-timer">40</div>
+            <div class="form-challenge card">
+                <form id="c2-form" onsubmit="submitC2(event)">
+                    <div class="form-group">
+                        <label for="c2-name">Full Name</label>
+                        <input type="text" id="c2-name" name="name" required autocomplete="off" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="c2-email">Email Address</label>
+                        <input type="email" id="c2-email" name="email" required autocomplete="off" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="c2-phone">Phone Number</label>
+                        <input type="tel" id="c2-phone" name="phone" required autocomplete="off" placeholder="+1 555 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="c2-country">Country</label>
+                        <select id="c2-country" name="country" required>
+                            <option value="">Select a country...</option>
+                            <option value="us">United States</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="de">Germany</option>
+                            <option value="mk">North Macedonia</option>
+                            <option value="fr">France</option>
+                            <option value="jp">Japan</option>
+                            <option value="br">Brazil</option>
+                            <option value="in">India</option>
+                            <option value="au">Australia</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="c2-agree" name="agree" required>
+                            <label for="c2-agree">I agree to the Terms of Service and Privacy Policy for this accessibility demonstration</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Submit Registration</button>
+                </form>
+            </div>
+        </div>
+        <div class="challenge-footer">
+            <button class="btn btn-outline" onclick="skipToNext(3)">Skip</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 3 INSTRUCTIONS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c3-instructions" class="instruction-overlay">
+        <div class="emoji-icon" aria-hidden="true">&#128065;</div>
+        <h2>Challenge 3: Tunnel Vision</h2>
+        <p class="instruction-text">
+            About 3% of people over 40 have glaucoma, which can cause tunnel vision - seeing only through a small "peephole."
+        </p>
+        <div class="physical-instruction">
+            &#128073; Drag your finger on the page to "look around" through a tiny window. Find and tap the hidden button!
+        </div>
+        <button class="btn btn-large" onclick="startC3()">I'm ready</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 3: TUNNEL VISION             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c3" class="screen">
+        <div class="progress-bar"><div class="fill" style="width: 75%"></div></div>
+        <div class="challenge-header">
+            <div class="step">Challenge 3 of 4</div>
+            <h2>Find the Button</h2>
+            <p class="description">Drag to look around. Find and tap "Subscribe"!</p>
+        </div>
+        <div class="challenge-area">
+            <div class="timer" id="c3-timer">25</div>
+            <div class="tunnel-container" id="c3-container">
+                <div class="tunnel-content" id="c3-content">
+                    <h3>Newsletter Signup</h3>
+                    <p>Stay up to date with the latest accessibility best practices and inclusive design patterns.</p>
+                    <p>We publish weekly articles about WCAG compliance, screen reader tips, and more.</p>
+                    <p>Join 10,000+ developers who care about building for everyone.</p>
+                    <div style="height: 60px;"></div>
+                    <p>New: Our 2025 Accessibility Audit Toolkit is now available for free download.</p>
+                    <div style="height: 40px;"></div>
+                    <p style="font-size: 0.85rem; color: var(--muted);">By subscribing you agree to receive emails. Unsubscribe any time.</p>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                        <button class="btn btn-success hidden-btn" id="c3-target-btn" onclick="hitC3Target()">Subscribe</button>
+                    </div>
+                    <div style="height: 80px;"></div>
+                    <p>Check out our partners: WebAIM, Deque Systems, The A11Y Project, and more.</p>
+                </div>
+                <svg class="tunnel-mask" id="c3-mask" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <mask id="tunnel-hole">
+                            <rect width="100%" height="100%" fill="white"/>
+                            <circle id="c3-circle" cx="180" cy="200" r="55" fill="black"/>
+                        </mask>
+                    </defs>
+                    <rect width="100%" height="100%" fill="#0f172a" mask="url(#tunnel-hole)"/>
+                </svg>
+            </div>
+        </div>
+        <div class="challenge-footer">
+            <button class="btn btn-outline" onclick="skipToNext(4)">Skip</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 4 INSTRUCTIONS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c4-instructions" class="instruction-overlay">
+        <div class="emoji-icon" aria-hidden="true">&#9200;</div>
+        <h2>Challenge 4: Under Pressure</h2>
+        <p class="instruction-text">
+            People with cognitive disabilities, anxiety, or even just a stressful day struggle with time-limited tasks. You'll type a 6-digit code before time runs out.
+        </p>
+        <div class="physical-instruction">
+            &#128073; The code will flash briefly, then disappear. Type it from memory with the timer counting down!
+        </div>
+        <button class="btn btn-large" onclick="startC4()">Show me the code</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHALLENGE 4: TIME PRESSURE OTP         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="c4" class="screen">
+        <div class="progress-bar"><div class="fill" style="width: 100%"></div></div>
+        <div class="challenge-header">
+            <div class="step">Challenge 4 of 4</div>
+            <h2>Enter the Code</h2>
+            <p class="description">Type the 6-digit code you just saw!</p>
+        </div>
+        <div class="challenge-area">
+            <div class="timer" id="c4-timer">10</div>
+            <div class="otp-challenge card">
+                <div class="otp-display" id="c4-code-display" aria-live="polite">------</div>
+                <div class="otp-inputs" id="c4-inputs">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1" data-index="0">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2" data-index="1">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3" data-index="2">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4" data-index="3">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5" data-index="4">
+                    <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6" data-index="5">
+                </div>
+                <button class="btn btn-success" style="width: 100%;" onclick="submitC4()">Verify Code</button>
+            </div>
+        </div>
+        <div class="challenge-footer">
+            <button class="btn btn-outline" onclick="showResults()">Skip</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RESULTS SCREEN                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="results" class="screen">
+        <div class="challenge-header">
+            <div class="emoji-icon" aria-hidden="true">&#128200;</div>
+            <h2>Your Results</h2>
+            <p class="description">Here's how you did:</p>
+        </div>
+        <div class="challenge-area">
+            <div class="results-list" id="results-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+        <div class="challenge-footer mt-2">
+            <button class="btn btn-large" onclick="showReflection()">See the Bigger Picture</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- REFLECTION / TAKEAWAY SCREEN           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="reflection" class="screen">
+        <div class="challenge-area">
+            <div class="reflection-card">
+                <div class="emoji-icon" aria-hidden="true">&#128161;</div>
+                <h2 style="margin-top: 0.5rem;">What You Just Felt</h2>
+                <blockquote>
+                    "These were just minutes of frustration. For 1.3 billion people worldwide, this is every interaction, every day."
+                </blockquote>
+
+                <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.75rem;">
+                    Disability isn't always permanent. It exists on a spectrum:
+                </p>
+
+                <div class="disability-types">
+                    <div class="disability-type">
+                        <span class="dt-icon" aria-hidden="true">&#9854;</span>
+                        <span class="dt-label">Permanent</span>
+                    </div>
+                    <div class="disability-type">
+                        <span class="dt-icon" aria-hidden="true">&#129397;</span>
+                        <span class="dt-label">Temporary</span>
+                    </div>
+                    <div class="disability-type">
+                        <span class="dt-icon" aria-hidden="true">&#9749;</span>
+                        <span class="dt-label">Situational</span>
+                    </div>
+                </div>
+
+                <p style="color: var(--text); font-size: 0.95rem; line-height: 1.6; margin-top: 0.5rem;">
+                    <strong>Tremor</strong> affects 1 in 25 people over 40.<br>
+                    <strong>One arm</strong> in a cast, holding a baby, or carrying groceries.<br>
+                    <strong>Tunnel vision</strong> from glaucoma or even bright sunlight.<br>
+                    <strong>Cognitive overload</strong> from stress, anxiety, or simply a bad day.
+                </p>
+
+                <p style="color: var(--accent-light); font-weight: 600; font-size: 1rem; margin-top: 1rem;">
+                    Accessible design helps <em>everyone</em>.
+                </p>
+            </div>
+
+            <div class="gap-row mt-3">
+                <button class="btn btn-outline" onclick="restartAll()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SR announcements -->
+    <div id="announce" class="sr-only" aria-live="assertive"></div>
+
+<script>
+(function() {
+    "use strict";
+
+    // ─── State ───
+    const results = {
+        c1: { completed: false, score: 0, total: 8 },
+        c2: { completed: false },
+        c3: { completed: false },
+        c4: { completed: false }
+    };
+
+    let activeTimer = null;
+    let c4Code = "";
+
+    // ─── Navigation ───
+    function showScreen(id) {
+        document.querySelectorAll(".screen, .instruction-overlay").forEach(el => {
+            el.classList.remove("active");
+        });
+        const target = document.getElementById(id);
+        if (target) {
+            target.classList.add("active");
+            target.scrollTo?.({ top: 0 });
+            window.scrollTo({ top: 0, behavior: "instant" });
+        }
+    }
+
+    function announce(text) {
+        const el = document.getElementById("announce");
+        el.textContent = "";
+        setTimeout(() => { el.textContent = text; }, 50);
+    }
+
+    // ─── Timer utility ───
+    function startTimer(elementId, seconds, onTick, onEnd) {
+        clearInterval(activeTimer);
+        let remaining = seconds;
+        const el = document.getElementById(elementId);
+        el.textContent = remaining;
+        el.classList.remove("urgent");
+
+        activeTimer = setInterval(() => {
+            remaining--;
+            el.textContent = remaining;
+            if (remaining <= 5) el.classList.add("urgent");
+            if (onTick) onTick(remaining);
+            if (remaining <= 0) {
+                clearInterval(activeTimer);
+                activeTimer = null;
+                if (onEnd) onEnd();
+            }
+        }, 1000);
+    }
+
+    // ─── LANDING ───
+    window.startChallenge = function() {
+        showScreen("c1-instructions");
+    };
+
+    // ═══════════════════════════════════════
+    // CHALLENGE 1: TREMOR / SHAKY TARGETS
+    // ═══════════════════════════════════════
+    let c1Score = 0;
+    let c1Round = 0;
+    const C1_TOTAL = 8;
+    let c1ActiveIndex = -1;
+
+    function buildC1Grid() {
+        const grid = document.getElementById("c1-grid");
+        grid.innerHTML = "";
+        for (let i = 0; i < 9; i++) {
+            const btn = document.createElement("button");
+            btn.className = "target-btn";
+            btn.setAttribute("aria-label", "Target " + (i + 1));
+            btn.dataset.index = i;
+            btn.addEventListener("click", () => handleC1Tap(i, btn));
+            grid.appendChild(btn);
+        }
+    }
+
+    function activateRandomTarget() {
+        if (c1Round >= C1_TOTAL) {
+            endC1();
+            return;
+        }
+        const btns = document.querySelectorAll("#c1-grid .target-btn");
+        btns.forEach(b => b.classList.remove("active-target", "hit", "miss"));
+
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * 9);
+        } while (newIndex === c1ActiveIndex);
+
+        c1ActiveIndex = newIndex;
+        btns[newIndex].classList.add("active-target");
+        announce("Tap target " + (newIndex + 1));
+    }
+
+    function handleC1Tap(index, btn) {
+        if (index === c1ActiveIndex) {
+            c1Score++;
+            btn.classList.add("hit");
+            document.getElementById("c1-score").textContent = c1Score;
+            // Try to vibrate on mobile
+            if (navigator.vibrate) navigator.vibrate(30);
+        } else {
+            btn.classList.add("miss");
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        }
+        c1Round++;
+        setTimeout(activateRandomTarget, 400);
+    }
+
+    function endC1() {
+        clearInterval(activeTimer);
+        results.c1.completed = true;
+        results.c1.score = c1Score;
+        announce("Challenge 1 complete. Score: " + c1Score + " of " + C1_TOTAL);
+        setTimeout(() => showScreen("c2-instructions"), 800);
+    }
+
+    window.startC1 = function() {
+        c1Score = 0;
+        c1Round = 0;
+        document.getElementById("c1-score").textContent = "0";
+        buildC1Grid();
+        showScreen("c1");
+
+        startTimer("c1-timer", 15, null, () => {
+            results.c1.completed = true;
+            results.c1.score = c1Score;
+            announce("Time's up! Score: " + c1Score + " of " + C1_TOTAL);
+            setTimeout(() => showScreen("c2-instructions"), 1000);
+        });
+
+        setTimeout(activateRandomTarget, 500);
+    };
+
+    // ═══════════════════════════════════════
+    // CHALLENGE 2: ONE-HANDED FORM
+    // ═══════════════════════════════════════
+    window.startC2 = function() {
+        showScreen("c2");
+        startTimer("c2-timer", 40, null, () => {
+            results.c2.completed = false;
+            announce("Time's up! The form was not completed.");
+            setTimeout(() => showScreen("c3-instructions"), 1000);
+        });
+        document.getElementById("c2-name").focus();
+    };
+
+    window.submitC2 = function(e) {
+        e.preventDefault();
+        const form = document.getElementById("c2-form");
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        clearInterval(activeTimer);
+        results.c2.completed = true;
+        announce("Form submitted successfully!");
+        setTimeout(() => showScreen("c3-instructions"), 800);
+    };
+
+    // ═══════════════════════════════════════
+    // CHALLENGE 3: TUNNEL VISION
+    // ═══════════════════════════════════════
+    window.startC3 = function() {
+        showScreen("c3");
+
+        const container = document.getElementById("c3-container");
+        const circle = document.getElementById("c3-circle");
+        const content = document.getElementById("c3-content");
+
+        // Scroll content to top
+        content.scrollTop = 0;
+
+        function moveCircle(x, y) {
+            const rect = container.getBoundingClientRect();
+            const cx = x - rect.left;
+            const cy = y - rect.top;
+            circle.setAttribute("cx", cx);
+            circle.setAttribute("cy", cy);
+        }
+
+        container.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            moveCircle(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        container.addEventListener("mousemove", (e) => {
+            moveCircle(e.clientX, e.clientY);
+        });
+
+        // Allow tapping through the mask
+        container.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            moveCircle(touch.clientX, touch.clientY);
+        });
+
+        // Make button clickable through mask by lifting pointer-events for the circle area
+        document.getElementById("c3-mask").style.pointerEvents = "none";
+
+        startTimer("c3-timer", 25, null, () => {
+            results.c3.completed = false;
+            announce("Time's up! Button not found.");
+            setTimeout(() => showScreen("c4-instructions"), 1000);
+        });
+    };
+
+    window.hitC3Target = function() {
+        clearInterval(activeTimer);
+        results.c3.completed = true;
+        announce("You found the button!");
+        setTimeout(() => showScreen("c4-instructions"), 800);
+    };
+
+    // ═══════════════════════════════════════
+    // CHALLENGE 4: TIME PRESSURE OTP
+    // ═══════════════════════════════════════
+    window.startC4 = function() {
+        // Generate random 6-digit code
+        c4Code = "";
+        for (let i = 0; i < 6; i++) {
+            c4Code += Math.floor(Math.random() * 10);
+        }
+
+        showScreen("c4");
+
+        // Show the code briefly
+        const display = document.getElementById("c4-code-display");
+        display.textContent = c4Code;
+        display.style.color = "var(--success)";
+
+        // Clear inputs
+        const inputs = document.querySelectorAll("#c4-inputs input");
+        inputs.forEach(inp => { inp.value = ""; });
+
+        // Hide code after 2.5 seconds, then start timer
+        setTimeout(() => {
+            display.textContent = "------";
+            display.style.color = "var(--muted)";
+            inputs[0].focus();
+
+            startTimer("c4-timer", 10, null, () => {
+                results.c4.completed = false;
+                announce("Time's up!");
+                setTimeout(() => showResults(), 1000);
+            });
+        }, 2500);
+
+        // Wire up OTP input auto-advance
+        inputs.forEach((inp, idx) => {
+            inp.addEventListener("input", () => {
+                if (inp.value.length === 1 && idx < 5) {
+                    inputs[idx + 1].focus();
+                }
+            });
+            inp.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && inp.value === "" && idx > 0) {
+                    inputs[idx - 1].focus();
+                }
+            });
+        });
+    };
+
+    window.submitC4 = function() {
+        const inputs = document.querySelectorAll("#c4-inputs input");
+        let entered = "";
+        inputs.forEach(inp => { entered += inp.value; });
+
+        clearInterval(activeTimer);
+
+        if (entered === c4Code) {
+            results.c4.completed = true;
+            announce("Code correct!");
+        } else {
+            results.c4.completed = false;
+            announce("Incorrect code.");
+        }
+        setTimeout(() => showResults(), 800);
+    };
+
+    // ═══════════════════════════════════════
+    // RESULTS
+    // ═══════════════════════════════════════
+    window.showResults = function() {
+        clearInterval(activeTimer);
+        const list = document.getElementById("results-list");
+        list.innerHTML = "";
+
+        const challenges = [
+            {
+                key: "c1",
+                title: "The Shaky Hand (Tremor)",
+                passText: "You hit " + results.c1.score + " of " + results.c1.total + " targets",
+                failText: "You hit " + results.c1.score + " of " + results.c1.total + " targets",
+                insight: "Essential tremor affects 1 in 25 adults over 40. Large touch targets (48x48px minimum) and reduced motion options make interfaces usable for everyone."
+            },
+            {
+                key: "c2",
+                title: "One Hand Only (Motor)",
+                passText: "Completed!",
+                failText: "Not completed in time",
+                insight: "About 26% of US adults have a disability. But even temporarily - a broken arm, holding a child, carrying groceries - one-handed use is universal. Place key actions within thumb reach."
+            },
+            {
+                key: "c3",
+                title: "Tunnel Vision (Visual)",
+                passText: "Button found!",
+                failText: "Button not found",
+                insight: "Glaucoma causes tunnel vision in 3% of people over 40. Clear visual hierarchy, logical layout, and proper focus management help users who can't scan the full screen."
+            },
+            {
+                key: "c4",
+                title: "Time Pressure (Cognitive)",
+                passText: "Code entered correctly!",
+                failText: "Code incorrect or timed out",
+                insight: "Anxiety, ADHD, cognitive disabilities, or just a bad day - time limits create real barriers. WCAG requires that users can extend, adjust, or disable time limits."
+            }
+        ];
+
+        challenges.forEach(ch => {
+            const item = document.createElement("div");
+            item.className = "result-item";
+            const passed = results[ch.key].completed;
+            item.innerHTML =
+                '<h3>' + ch.title + '</h3>' +
+                '<div class="result-status ' + (passed ? 'pass' : 'fail') + '">' +
+                    (passed ? ch.passText : ch.failText) +
+                '</div>' +
+                '<p class="insight">' + ch.insight + '</p>';
+            list.appendChild(item);
+        });
+
+        showScreen("results");
+    };
+
+    // ═══════════════════════════════════════
+    // REFLECTION
+    // ═══════════════════════════════════════
+    window.showReflection = function() {
+        showScreen("reflection");
+    };
+
+    // ─── Skip / restart ───
+    window.skipToNext = function(nextChallenge) {
+        clearInterval(activeTimer);
+        const screens = {
+            2: "c2-instructions",
+            3: "c3-instructions",
+            4: "c4-instructions",
+            5: "results"
+        };
+        showScreen(screens[nextChallenge]);
+    };
+
+    window.restartAll = function() {
+        clearInterval(activeTimer);
+        results.c1 = { completed: false, score: 0, total: 8 };
+        results.c2 = { completed: false };
+        results.c3 = { completed: false };
+        results.c4 = { completed: false };
+        c1Score = 0;
+        c1Round = 0;
+        showScreen("landing");
+    };
+
+})();
+</script>
+</body>
+</html>
