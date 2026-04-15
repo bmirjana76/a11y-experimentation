@@ -564,14 +564,14 @@
                  role="timer"
                  aria-live="off"
                      aria-atomic="true">
-                    20
+                    40
                 </div>
             <p class="timer-label" id="timer-status">seconds remaining</p>
             <!-- AAA: Timing Adjustable (WCAG 2.2.1) - user can extend or disable -->
             <div class="timer-controls">
                 <button class="btn btn-outline" id="btn-add-time" type="button"
                         aria-label="Add 20 more seconds to the timer">
-                    +20 seconds
+                    +40 seconds
                 </button>
                 <button class="btn btn-outline" id="btn-disable-timer" type="button"
                         aria-label="Disable the timer completely">
@@ -985,10 +985,10 @@
          * State
          * ────────────────────────────────────────────── */
         let timerInterval = null;
-        let timerRemaining = 20;
+        let timerRemaining = 40;
         let timerDisabled = false;
         let challengeStartTime = null;
-        const INITIAL_TIME = 20;
+        const INITIAL_TIME = 40;
 
         /* ──────────────────────────────────────────────
          * DOM References
@@ -1057,8 +1057,8 @@
                 $timerDisplay.textContent = timerRemaining;
 
                 // Announce at key intervals for screen readers
-                if (timerRemaining === 20) {
-                    announce("20 seconds remaining.");
+                if (timerRemaining === 40) {
+                    announce("40 seconds remaining.");
                 } else if (timerRemaining === 10) {
                     $timerDisplay.classList.add("urgent");
                     $timerDisplay.setAttribute("aria-live", "assertive");
@@ -1076,11 +1076,11 @@
         }
 
         function addTime() {
-            timerRemaining += 20;
+            timerRemaining += 40;
             $timerDisplay.textContent = timerRemaining;
             $timerDisplay.classList.remove("urgent");
             $timerDisplay.setAttribute("aria-live", "off");
-            announce("20 seconds added. " + timerRemaining + " seconds remaining.");
+            announce("40 seconds added. " + timerRemaining + " seconds remaining.");
         }
 
         function disableTimer() {
